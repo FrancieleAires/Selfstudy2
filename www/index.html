@@ -4,17 +4,115 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
-    <script src="components/loader.js"></script>
+    <script src="components/main1.js"></script>
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="css/style.css">
-    <script>
-    </script>
 </head>
 <body>
   <div class="logo">
-       
-          
-      </div>
+    <img class="imagem" src="icone.png" alt="logo">
+            <div class="hamburger" >
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+      </div>   
+    </div>
+    <div class="div">
+        <h1 class="title">Cronômetro</h1>
+    </div>
+     <div class="timer-container">
+    <div id="timer"> 00:00:00
+    </div>
+    </div>
+    <div id="buttons">
+        <button id="start" class="start">Iniciar</button>
+        <button id="pause" class="pause">Pausar</button>
+        <button id="reset" class="reset">Zerar</button>
+    </div>
+
+    <div class="dados">
+        <h1> Dados do cronômetro </h1>
+        <p id="elapsed-time">Tempo decorrido: 00:00:00</p>
+   </div>
      
+    
+     <script>
+         let timer;
+        let isRunning = false;
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+
+        const timerDisplay = document.getElementById("timer");
+        const startButton = document.getElementById("start");
+        const pauseButton = document.getElementById("pause");
+        const resetButton = document.getElementById("reset");
+        const elapsedTimeDisplay = document.getElementById("elapsed-time");
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(updateTimer, 1000);
+                startButton.disabled = true;
+                pauseButton.disabled = false;
+                resetButton.disabled = false;
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timer);
+                startButton.disabled = false;
+                pauseButton.disabled = true;
+            }
+        }
+
+        function resetTimer() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timer);
+                const elapsedTime = formatTime(hours, minutes, seconds);
+                elapsedTimeDisplay.textContent = "Tempo decorrido: " + elapsedTime;
+                elapsedTimeDisplay.style.display = "block";
+            }
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            timerDisplay.textContent = "00:00:00";
+            startButton.disabled = false;
+            pauseButton.disabled = true;
+            resetButton.disabled = true;
+        }
+
+        function updateTimer() {
+            seconds++;
+            if (seconds == 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes == 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+
+            timerDisplay.textContent = (hours < 10 ? "0" : "") + hours + ":" +
+                                      (minutes < 10 ? "0" : "") + minutes + ":" +
+                                      (seconds < 10 ? "0" : "") + seconds;
+        }
+
+        function formatTime(hours, minutes, seconds) {
+            return (
+                (hours < 10 ? "0" : "") + hours + ":" +
+                (minutes < 10 ? "0" : "") + minutes + ":" +
+                (seconds < 10 ? "0" : "") + seconds
+            );
+        }
+
+        startButton.addEventListener("click", startTimer);
+        pauseButton.addEventListener("click", pauseTimer);
+        resetButton.addEventListener("click", resetTimer);
+
+         </script>
 </body>
 </html>
