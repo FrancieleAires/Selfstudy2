@@ -1,118 +1,92 @@
-<!DOCTYPE HTML>
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
-    <script src="components/main1.js"></script>
-    <link rel="stylesheet" href="components/loader.css">
+    <title>Dynamic Calendar JavaScript | CodingNepal</title>
     <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <div class="logo">
-    <img class="imagem" src="icone.png" alt="logo">
-            <div class="hamburger" >
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-      </div>   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+ 
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <p class="current-date"></p>
+        <div class="icons">
+          <span id="prev" class="material-symbols-rounded">chevron_left</span>
+          <span id="next" class="material-symbols-rounded">chevron_right</span>
+        </div>
+      </header>
+      <div class="calendar">
+        <ul class="weeks">
+          <li>Dom</li>
+          <li>Seg</li>
+          <li>Ter</li>
+          <li>Qua</li>
+          <li>Qui</li>
+          <li>Sex</li>
+          <li>Sab</li>
+        </ul>
+        <ul class="days"></ul>
+      </div>
     </div>
-    <div class="div">
-        <h1 class="title">Cronômetro</h1>
-    </div>
-     <div class="timer-container">
-    <div id="timer"> 00:00:00
-    </div>
-    </div>
-    <div id="buttons">
-        <button id="start" class="start">Iniciar</button>
-        <button id="pause" class="pause">Pausar</button>
-        <button id="reset" class="reset">Zerar</button>
-    </div>
+    <script>
+        const daysTag = document.querySelector(".days"),
+currentDate = document.querySelector(".current-date"),
+prevNextIcon = document.querySelectorAll(".icons span");
 
-    <div class="dados">
-        <h1> Dados do cronômetro </h1>
-        <p id="elapsed-time">Tempo decorrido: 00:00:00</p>
-   </div>
-     
+
+let date = new Date(),
+currYear = date.getFullYear(),
+currMonth = date.getMonth();
+
+
+const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
+              "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+const renderCalendar = () => {
+    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), 
+    lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), 
+    lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), 
+    lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); 
+    let liTag = "";
+
+    for (let i = firstDayofMonth; i > 0; i--) { 
+        liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
+    }
+
+    for (let i = 1; i <= lastDateofMonth; i++) { 
+        
+        let isToday = i === date.getDate() && currMonth === new Date().getMonth() 
+                     && currYear === new Date().getFullYear() ? "active" : "";
+        liTag += `<li class="${isToday}">${i}</li>`;
+    }
+
+    for (let i = lastDayofMonth; i < 6; i++) { 
+        liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
+    }
+    currentDate.innerText = `${months[currMonth]} ${currYear}`;
+    daysTag.innerHTML = liTag;
+}
+renderCalendar();
+
+prevNextIcon.forEach(icon => { 
+    icon.addEventListener("click", () => { 
+        
+        currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+        if(currMonth < 0 || currMonth > 11) { 
+        
+            date = new Date(currYear, currMonth, new Date().getDate());
+            currYear = date.getFullYear(); 
+            currMonth = date.getMonth(); 
+        } else {
+            date = new Date(); 
+        }
+        renderCalendar(); 
+    });
+});
+        </script>
     
-     <script>
-         let timer;
-        let isRunning = false;
-        let seconds = 0;
-        let minutes = 0;
-        let hours = 0;
-
-        const timerDisplay = document.getElementById("timer");
-        const startButton = document.getElementById("start");
-        const pauseButton = document.getElementById("pause");
-        const resetButton = document.getElementById("reset");
-        const elapsedTimeDisplay = document.getElementById("elapsed-time");
-
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                timer = setInterval(updateTimer, 1000);
-                startButton.disabled = true;
-                pauseButton.disabled = false;
-                resetButton.disabled = false;
-            }
-        }
-
-        function pauseTimer() {
-            if (isRunning) {
-                isRunning = false;
-                clearInterval(timer);
-                startButton.disabled = false;
-                pauseButton.disabled = true;
-            }
-        }
-
-        function resetTimer() {
-            if (isRunning) {
-                isRunning = false;
-                clearInterval(timer);
-                const elapsedTime = formatTime(hours, minutes, seconds);
-                elapsedTimeDisplay.textContent = "Tempo decorrido: " + elapsedTime;
-                elapsedTimeDisplay.style.display = "block";
-            }
-            seconds = 0;
-            minutes = 0;
-            hours = 0;
-            timerDisplay.textContent = "00:00:00";
-            startButton.disabled = false;
-            pauseButton.disabled = true;
-            resetButton.disabled = true;
-        }
-
-        function updateTimer() {
-            seconds++;
-            if (seconds == 60) {
-                seconds = 0;
-                minutes++;
-                if (minutes == 60) {
-                    minutes = 0;
-                    hours++;
-                }
-            }
-
-            timerDisplay.textContent = (hours < 10 ? "0" : "") + hours + ":" +
-                                      (minutes < 10 ? "0" : "") + minutes + ":" +
-                                      (seconds < 10 ? "0" : "") + seconds;
-        }
-
-        function formatTime(hours, minutes, seconds) {
-            return (
-                (hours < 10 ? "0" : "") + hours + ":" +
-                (minutes < 10 ? "0" : "") + minutes + ":" +
-                (seconds < 10 ? "0" : "") + seconds
-            );
-        }
-
-        startButton.addEventListener("click", startTimer);
-        pauseButton.addEventListener("click", pauseTimer);
-        resetButton.addEventListener("click", resetTimer);
-
-         </script>
-</body>
+  </body>
 </html>
