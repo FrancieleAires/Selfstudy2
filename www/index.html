@@ -2,37 +2,133 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="components/main1.js"></script>
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="components/loader.js"></script>
-    
 </head>
 <body>
-      <div class="logo">
-    <img class="imagem" src="icone.png" alt="logo">
-            <div class="hamburger" >
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-      </div>   
+    <div class="logo">
+        <img class="imagem" src="icone.png" alt="logo">
+        <div class="navbar">
+            <div class="hamburger" onclick="toggleNav()">
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Início</a>
+                <a href="QuemSomos.html">Conteúdos</a>
+                <a href="calendario.html">Calendário</a>
+                <a href="Personagens.html">ChatBot</a>
+                <a href="Personagens.html">Cronômetro</a>
+                <a href="Personagens.html">Emoji</a>
+            </div>
+        </div>
     </div>
-    <div class="titulos">
-        <img class="imagem1" src="coruja.png" alt="coruja">
-         <h1 class="title1">Biologia</h1>
-         <img class="imagem2" src="iconeBiologia.png" alt="icone">
-         </div>
-          <img class="imagem3" src="Biologia.png" alt="biologia">
-    <div class="botoes"> 
-            <button class="botao1">O que é</button>
-            <button class="botao1">Tipos</button>
-             </div>
-            <button class="botao1">Importância</button>
+    <h1 class="title2"> ChatBot </h1>
+    <div id="chatContainer" class="chat-container"></div>
+    <input class="input" type="text" id="userInput" onkeyup="handleUserInput(event)" placeholder="Digite sua mensagem...">
 
-    
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        let conversation = [];
 
+        function botResponse(userInput) {
+            if (userInput.toLowerCase().includes('estudar')) {
+                return 'Escolha uma matéria: Matemática, Geografia, Biologia.';
+            } else if (userInput.toLowerCase().includes('matemática')) {
+                return 'Você deve estudar Radiano, Tabuada e Divisão.';
+            } else if (userInput.toLowerCase().includes('geografia')) {
+                return 'Você deve estudar Continentes e Tipos de Relevo.';
+            } else if (userInput.toLowerCase().includes('biologia')) {
+                return 'Você deve estudar Botânica, Zoológica e Microbiologia.';
+            } else if (userInput.toLowerCase().includes('feliz')) {
+                return 'Que ótimo! Continue assim!';
+            } else if (userInput.toLowerCase().includes('triste')) {
+                return 'Não se preocupe, dias melhores virão!';
+            } else if (userInput.toLowerCase().includes('bravo')) {
+                return 'Respire fundo, tudo vai ficar bem.';
+            } else if (userInput.toLowerCase().includes('entediado')) {
+              return 'Um bom banho quente irá resolver!.';
+            } else if (userInput.toLowerCase().includes('sentimentos')) {
+                return 'Como você está se sentindo hoje? Opções: Feliz, Triste, Bravo, Entediado, Sonolento, Neutro.';
+                return 'Que tal tentar algo novo para animar o seu dia?';
+            } else if (userInput.toLowerCase().includes('sonolento')) {
+                return 'Uma boa soneca pode fazer maravilhas!';
+            } else if (userInput.toLowerCase().includes('neutro')) {
+                return 'Às vezes é bom apenas relaxar e não se preocupar com nada.';
+            } else if (userInput.toLowerCase().includes('agendar')) {
+                window.location = "calendario.html";
+                return 'Redirecionando para o calendário...';
+            } else {
+                return 'Desculpe, não entendi. Poderia repetir de outra forma?';
+            }
+        }
 
+        function updateChat(message, isUser) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageElement.innerText = message;
+            chatContainer.appendChild(messageElement);
+        }
 
+        function handleUserInput(event) {
+            if (event.key === 'Enter') {
+                const userInputValue = userInput.value;
+                updateChat(userInputValue, true);
+                conversation.push(userInputValue);
+                const botReply = botResponse(userInputValue);
+                updateChat(botReply, false);
+                conversation.push(botReply);
+                userInput.value = '';
+            }
+        }
+           function updateChat(message, isUser) {
+            const messageElement = document.createElement('div');
+            const iconElement = document.createElement('img');
+
+            messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageElement.innerText = message;
+            iconElement.src = isUser ? 'usuario.png' : 'robo.png';
+            iconElement.classList.add(isUser ? 'user-icon' : 'bot-icon');
+
+            messageElement.prepend(iconElement);
+            chatContainer.appendChild(messageElement);
+        }
+
+        function handleUserInput(event) {
+            if (event.key === 'Enter') {
+                const userInputValue = userInput.value;
+                updateChat(userInputValue, true);
+                conversation.push(userInputValue);
+                const botReply = botResponse(userInputValue);
+                updateChat(botReply, false);
+                conversation.push(botReply);
+                userInput.value = '';
+            }
+        }
+
+        updateChat('Olá! Como posso ajudar você hoje? Opções: "Quero estudar", "Quero falar meus sentimentos", "Quero agendar um evento".', false);
+        function toggleNav() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "block") {
+                navLinks.style.display = "none";
+            } else {
+                navLinks.style.display = "block";
+            }
+        }
+
+        function toggleLinks() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "none") {
+                navLinks.style.display = "block";
+            } else {
+                navLinks.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

@@ -9,18 +9,28 @@
  
   </head>
   <body>
-       <div class="logo">
-    <img class="imagem" src="icone.png" alt="logo">
-            <div class="hamburger" >
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-      </div>   
+    <div class="logo">
+        <img class="imagem" src="icone.png" alt="logo">
+        <div class="navbar">
+            <div class="hamburger" onclick="toggleNav()">
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Início</a>
+                <a href="QuemSomos.html">Conteúdos</a>
+                <a href="Personagens.html">Calendário</a>
+                <a href="Personagens.html">ChatBot</a>
+                <a href="Personagens.html">Cronômetro</a>
+                <a href="Personagens.html">Emoji</a>
+            </div>
+        </div>
     </div>
      <div class="div">
         <h1 class="title">Calendário</h1>
     </div>
-    <p class="texto"> Selecione uma data e confirme. </p>
+    <p class="texto"> Selecione uma data e o evento. </p>
     <div class="wrapper">
       <header>
         <p class="current-date"></p>
@@ -42,8 +52,18 @@
         <ul class="days"></ul>
       </div>
     </div>
+    <div class="input-container">
+    <input type="date" id="input-date">
+    <button onclick="clearDate()" class="botao-limpar">Limpar Data</button>
+    <input type="text" id="input-event" placeholder="Insira o evento ou matéria aqui">
+    <button onclick="registerEvent()" class="botao4">Confirmar</button>
+  </div>
+  <div class="historico">
+    <h2>Histórico:</h2>
+    <ul id="historico-list"></ul>
+  </div>
 
-    <button class="botao">Confirmar</button>
+
     <script>
         const daysTag = document.querySelector(".days"),
 currentDate = document.querySelector(".current-date"),
@@ -100,6 +120,48 @@ prevNextIcon.forEach(icon => {
         renderCalendar(); 
     });
 });
+ function clearDate() {
+      document.getElementById('input-date').value = '';
+    }
+ const days = document.querySelectorAll('.days li');
+
+    days.forEach(day => {
+      day.addEventListener('click', () => {
+        const selectedDate = `${day.innerText} de ${months[currMonth]} de ${currYear}`;
+        document.getElementById('input-date').value = selectedDate;
+      });
+    });
+    function formatDate(date) {
+      const parts = date.split("-");
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+   function registerEvent() {
+      const inputDate = document.getElementById('input-date').value;
+      const formattedDate = formatDate(inputDate);
+      const inputEvent = document.getElementById('input-event').value;
+      const historicoList = document.getElementById('historico-list');
+      const listItem = document.createElement('li');
+      listItem.appendChild(document.createTextNode(`Data: ${formattedDate},  Evento: ${inputEvent}`));
+      historicoList.appendChild(listItem);
+    }
+    function toggleNav() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "block") {
+                navLinks.style.display = "none";
+            } else {
+                navLinks.style.display = "block";
+            }
+        }
+
+        function toggleLinks() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "none") {
+                navLinks.style.display = "block";
+            } else {
+                navLinks.style.display = "none";
+            }
+        }
         </script>
     
   </body>

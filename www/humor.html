@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+   <div class="logo">
+        <img class="imagem" src="icone.png" alt="logo">
+        <div class="navbar">
+            <div class="hamburger" onclick="toggleNav()">
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Início</a>
+                <a href="QuemSomos.html">Conteúdos</a>
+                <a href="Personagens.html">Calendário</a>
+                <a href="Personagens.html">ChatBot</a>
+                <a href="Personagens.html">Cronômetro</a>
+                <a href="Personagens.html">Emoji</a>
+            </div>
+        </div>
+    </div>
+    <h1 class="title1"> Como se sente hoje? </h1>
+    <div class="container">
+        <div class="emoji" onclick="selectEmoji('😊')"> 
+            <img class="emoji1" src="sorridente.png" alt="Feliz">
+            <p>Feliz</p>
+        </div>
+        <div class="emoji" onclick="selectEmoji('😢')">
+            <img class="emoji1"src="chateado.png" alt="Triste">
+            <p>Triste</p>
+        </div>
+        <div class="emoji" onclick="selectEmoji('😡')"> 
+            <img class="emoji1" src="irritado.png" alt="Bravo">
+            <p>Bravo (a)</p>
+        </div>
+         <div class="emoji" onclick="selectEmoji('🙄')"> 
+            <img class="emoji1" src="entediado.png" alt="Entediado">
+            <p>Entediado (a)</p>
+        </div>
+         <div class="emoji" onclick="selectEmoji('🤔')"> 
+            <img class="emoji1" src="pensativo.png" alt="pensativo">
+            <p>Pensativo (a)</p>
+        </div>
+        <div class="emoji" onclick="selectEmoji('🤐')"> 
+            <img class="emoji1" src="silencioso.jpg" alt="Silencioso">
+            <p>Silencioso (a)</p>
+        </div>
+        <div class="emoji" onclick="selectEmoji('🥱')"> 
+            <img class="emoji1" src="sonolento.png" alt="sonolento">
+            <p>Sonolento (a)</p>
+        </div>
+        <div class="emoji" onclick="selectEmoji('😰')"> 
+            <img class="emoji1" src="suandofrio.png" alt="suandofrio">
+            <p>Suando Frio</p>
+        </div>
+        
+    </div>
+    <button class="botao" onclick="confirmSelection()">Confirmar</button>
+    <script>
+        function toggleNav() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "block") {
+                navLinks.style.display = "none";
+            } else {
+                navLinks.style.display = "block";
+            }
+        }
+
+        function toggleLinks() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "none") {
+                navLinks.style.display = "block";
+            } else {
+                navLinks.style.display = "none";
+            }
+        }
+         let selectedEmoji = '';
+
+        function selectEmoji(emoji) {
+            selectedEmoji = emoji;
+        }
+
+        function confirmSelection() {
+            if (selectedEmoji === '') {
+                alert("Por favor, selecione um emoji antes de confirmar.");
+            } else {
+                alert("Seu sentimento selecionado é: " + selectedEmoji);
+            }
+        }
+        </script>
+</body>
+</html>
