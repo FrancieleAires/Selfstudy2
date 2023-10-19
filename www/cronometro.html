@@ -9,152 +9,124 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="logo">
-<img class="imagem" src="icone.png" alt="logo">
-<div class="navbar">
-<div class="hamburger" onclick="toggleNav()">
-<div class="line" onclick="toggleLinks()"></div>
-<div class="line" onclick="toggleLinks()"></div>
-<div class="line" onclick="toggleLinks()"></div>
-</div>
-<div class="nav-links" id="navLinks">
-<a href="index.html">Início</a>
-<a href="QuemSomos.html">Conteúdos</a>
-<a href="Personagens.html">Calendário</a>
-<a href="Personagens.html">ChatBot</a>
-<a href="Personagens.html">Cronômetro</a>
-<a href="Personagens.html">Emoji</a>
-</div>
-</div>
-</div>
-<div class="div">
-<h1 class="title">Cronômetro</h1>
-</div>
-<div class="timer-container">
-<div id="timer"> 00:00:00
-</div>
-</div>
-<div id="buttons">
-<button id="start" class="start">Iniciar</button>
-<button id="pause" class="pause">Pausar</button>
-<button id="reset" class="reset" onclick="resetTimer()">Zerar</button>
-</div>
+    
+    <div class="logo">
+        <img class="imagem" src="icone.png" alt="logo">
+        <div class="navbar">
+            <div class="hamburger" onclick="toggleNav()">
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+                <div class="line" onclick="toggleLinks()"></div>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Início</a>
+                <a href="QuemSomos.html">Conteúdos</a>
+                <a href="Personagens.html">Calendário</a>
+                <a href="Personagens.html">ChatBot</a>
+                <a href="Personagens.html">Cronômetro</a>
+                <a href="Personagens.html">Emoji</a>
+            </div>
+        </div>
+    </div>
 
-<div class="dados">
-<h1> Dados do cronômetro </h1>
-<p id="elapsed-time">Tempo decorrido: 00:00:00</p>
-</div>
-<script>
-   let timer;
-   let isRunning = false;
-   let seconds = 0;
-   let minutes = 0;
-   let hours = 0;
+    <div class="div">
+        <h1 class="title">Cronômetro</h1>
+    </div>
 
-   const timerDisplay = document.getElementById("timer");
-   const startButton = document.getElementById("start");
-   const pauseButton = document.getElementById("pause");
-   const resetButton = document.getElementById("reset");
-   const elapsedTimeDisplay = document.getElementById("elapsed-time");
+    <div class="timer-container">
+        <div class="timer">00:00:00</div>
+    </div>
 
-   function startTimer() {
-       if (!isRunning) {
-           isRunning = true;
-           timer = setInterval(updateTimer, 1000);
-           startButton.disabled = true;
-           pauseButton.disabled = false;
-           resetButton.disabled = false;
-       }
-   }
+    <div id="buttons">
+          <button id="start" class="start">Iniciar</button>
+        <button id="pause" class="pause">Pausar</button>
+        <button id="reset" class="reset"> Zerar</button>
+        
+    </div>
 
-   function pauseTimer() {
-       if (isRunning) {
-           isRunning = false;
-           clearInterval(timer);
-           startButton.disabled = false;
-           pauseButton.disabled = true;
-       }
-   }
+    <div class="dados">
+        
+        <p id="elapsed-time">Tempo decorrido:  </p>
+        <div id="history"></div>
+    </div>
 
-  let elapsedTimeSeconds = 0;
+    <script>
+       let timerInterval;
+        let seconds = 0;
 
-   function resetTimer() {
-       if (isRunning) {
-           isRunning = false;
-           clearInterval(timer);
-           elapsedTimeSeconds = hours * 3600 + minutes * 60 + seconds;
-           const elapsedTime = formatTime(hours, minutes, seconds);
-           const elapsedTimeDisplay = document.getElementById("elapsed-time");
-           elapsedTimeDisplay.textContent = "Tempo decorrido: " + elapsedTime;
-           elapsedTimeDisplay.style.display = "block";
-           
-       }
-       seconds = 0;
-       minutes = 0;
-       hours = 0;
-       timerDisplay.textContent = "00:00:00";
-       startButton.disabled = false;
-       pauseButton.disabled = true;
-       resetButton.disabled = true;
-   }
+        const startBtn = document.getElementById("start");
+        const pauseBtn = document.getElementById("pause");
+        const resetBtn = document.getElementById("reset");
+        const historyDiv = document.getElementById("history");
 
-   function formatTimeFromSeconds(totalSeconds) {
-       const hours = Math.floor(totalSeconds / 3600);
-       const minutes = Math.floor((totalSeconds % 3600) / 60);
-       const seconds = totalSeconds % 60;
-       return (
-           (hours < 10 ? "0" : "") + hours + ":" +
-           (minutes < 10 ? "0" : "") + minutes + ":" +
-           (seconds < 10 ? "0" : "") + seconds
-       );
-   }
+        let history = [];
 
-   function updateTimer() {
-       seconds++;
-       if (seconds == 60) {
-           seconds = 0;
-           minutes++;
-           if (minutes == 60) {
-               minutes = 0;
-               hours++;
-           }
-       }
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                seconds++;
+                displayTime();
+            }, 1000);
+        }
 
-       timerDisplay.textContent = (hours < 10 ? "0" : "") + hours + ":" +
-           (minutes < 10 ? "0" : "") + minutes + ":" +
-           (seconds < 10 ? "0" : "") + seconds;
-   }
+        function pauseTimer() {
+            clearInterval(timerInterval);
+        }
 
-   function formatTime(hours, minutes, seconds) {
-       return (
-           (hours < 10 ? "0" : "") + hours + ":" +
-           (minutes < 10 ? "0" : "") + minutes + ":" +
-           (seconds < 10 ? "0" : "") + seconds
-       );
-   }
+        function resetTimer() {
+            clearInterval(timerInterval);
+            const timeElapsed = formatTime();
+            seconds = 0;
+            displayTime();
+            history.push(timeElapsed);
+            displayHistory();
+        }
 
-   startButton.addEventListener("click", startTimer);
-   pauseButton.addEventListener("click", pauseTimer);
+        function displayTime() {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
 
-   function toggleNav() {
-       var navLinks = document.getElementById("navLinks");
-       if (navLinks.style.display === "block") {
-           navLinks.style.display = "none";
-       } else {
-           navLinks.style.display = "block";
-       }
-   }
+            const formattedTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+            document.querySelector(".timer").textContent = formattedTime;
+        }
 
-   function toggleLinks() {
-       var navLinks = document.getElementById("navLinks");
-       if (navLinks.style.display === "none") {
-           navLinks.style.display = "block";
-       } else {
-           navLinks.style.display = "none";
-       }
-   }
-         </script>
+        function displayHistory() {
+            historyDiv.innerHTML = "";
+            history.forEach(item => {
+                const p = document.createElement("p");
+                p.textContent = item;
+                historyDiv.appendChild(p);
+            });
+        }
+
+        function formatTime() {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+        }
+
+        startBtn.addEventListener("click", startTimer);
+        pauseBtn.addEventListener("click", pauseTimer);
+        resetBtn.addEventListener("click", resetTimer);
+        function toggleNav() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "block") {
+                navLinks.style.display = "none";
+            } else {
+                navLinks.style.display = "block";
+            }
+        }
+
+        function toggleLinks() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "none") {
+                navLinks.style.display = "block";
+            } else {
+                navLinks.style.display = "none";
+            }
+        }
+    </script>
 </body>
+
 </html>
-
-

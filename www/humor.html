@@ -64,7 +64,10 @@
         </div>
         
     </div>
+    <div class="alinhamento">
     <button class="botao" onclick="confirmSelection()">Confirmar</button>
+    <button class="botao" onclick="limparSelecao()">Limpar</button>
+    </div>
     <script>
         function toggleNav() {
             var navLinks = document.getElementById("navLinks");
@@ -95,6 +98,10 @@
             } else {
                 alert("Seu sentimento selecionado é: " + selectedEmoji);
             }
+        }
+         function limparSelecao() {
+            selectedEmoji = '';
+            alert("Seleção de emoji limpa. Por favor, selecione um novo emoji.");
         }
         </script>
 </body>
